@@ -1,0 +1,33 @@
+{
+  "name": "@samwen/aws-utils",
+  "version": "1.0.0",
+  "description": "a collection of aws functions",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --reporter spec test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samswen/aws-utils.git"
+  },
+  "keywords": [
+    "aws sdk"
+  ],
+  "author": "Sam Wen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samswen/to-string/issues"
+  },
+  "homepage": "https://github.com/samswen/to-string#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^7.12.1",
+    "mocha": "^8.2.0",
+    "sinon": "^9.2.1"
+  },
+  "dependencies": {
+    "@samwen/fs-utils": "^1.0.3",
+    "aws-sdk": "^2.783.0",
+    "fs": "0.0.1-security"
+  }
+}
