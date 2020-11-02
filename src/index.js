@@ -45,7 +45,7 @@ function setup(config, arg_logger) {
     if (!config) {
         throw new Error('call setup without config');
     }
-    if (!config.aws_account || !config.aws_credentials) {
+    if (!config.get('aws_account') || !config.get('aws_credentials')) {
         throw new Error('config missing minima required aws_account and/or aws_credentials');
     }
     if (!arg_logger) {
