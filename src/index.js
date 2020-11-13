@@ -71,17 +71,20 @@ function setup(config, arg_logger) {
     AWS.config.update(aws_credentials);
 }
 
-function create_cname(name) {
+function create_cname(name, route53_info) {
+    if (!route53_info) {
+        route53_info = aws_route53_info;
+    }
     return new Promise((resolve) => {
         const route53 = new AWS.Route53();
         const params = {
-            HostedZoneId: aws_route53_info.hostedZoneId,
+            HostedZoneId: route53_info.hostedZoneId,
             ChangeBatch: { Changes: [ { Action: 'CREATE',
                 ResourceRecordSet: {
-                    Name: name + '.' + aws_route53_info.name,
+                    Name: name + '.' + route53_info.name,
                     Type: 'CNAME',
                     TTL: 300,
-                    ResourceRecords: [{ Value: aws_route53_info.value }]
+                    ResourceRecords: [{ Value: route53_info.value }]
                 }
             }]}
         };
@@ -100,17 +103,20 @@ function create_cname(name) {
     });
 }
 
-function delete_cname(name) {
+function delete_cname(name, route53_info) {
+    if (!route53_info) {
+        route53_info = aws_route53_info;
+    }
     return new Promise((resolve) => {
         const route53 = new AWS.Route53();
         const params = {
-            HostedZoneId: aws_route53_info.hostedZoneId,
+            HostedZoneId: route53_info.hostedZoneId,
             ChangeBatch: { Changes: [ { Action: 'DELETE',
                 ResourceRecordSet: {
-                    Name: name + '.' + aws_route53_info.name,
+                    Name: name + '.' + route53_info.name,
                     Type: 'CNAME',
                     TTL: 300,
-                    ResourceRecords: [{ Value: aws_route53_info.value }]
+                    ResourceRecords: [{ Value: route53_info.value }]
                 }
             }]}
         };
