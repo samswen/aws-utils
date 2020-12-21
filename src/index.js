@@ -135,13 +135,10 @@ function delete_cname(name, route53_info) {
     });
 }
 
-function publish_notification(topic, data, region) {
+function publish_notification(topic, data) {
     return new Promise((resolve) => {
-        if (!region) {
-            region = aws_region;
-        }
         const sns = new AWS.SNS();
-        const topic_arn = 'arn:aws:sns:' + region + ':' + aws_account + ':' + topic;
+        const topic_arn = 'arn:aws:sns:' + aws_region + ':' + aws_account + ':' + topic;
         const params = {
             Message: JSON.stringify(data),
             Subject: topic,
