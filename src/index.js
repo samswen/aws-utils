@@ -433,10 +433,10 @@ async function delete_ecs_service(name, store_name) {
     });
 }
 
-function get_queue_size_approximation(queue_name) {
-    const queue_url = aws_queue_urls[queue_name];
+function get_queue_size_approximation(queue) {
+    const queue_url = queue.startsWith('https://') ? queue : aws_queue_urls[queue];
     if (!queue_url) {
-        throw Error('queue_name not found: ' + queue_name);
+        throw Error('queue_name not found: ' + queue);
     }
     return new Promise((resolve) => {
         const sqs = new AWS.SQS();
@@ -462,10 +462,10 @@ function get_queue_size_approximation(queue_name) {
 
 }
 
-function send_sqs_message(queue_name, message) {
-    const queue_url = aws_queue_urls[queue_name];
+function send_sqs_message(queue, message) {
+    const queue_url = queue.startsWith('https://') ? queue : aws_queue_urls[queue];
     if (!queue_url) {
-        throw Error('queue_name not found: ' + queue_name);
+        throw Error('queue_name not found: ' + queue);
     }
     return new Promise((resolve) => {
         const sqs = new AWS.SQS();
@@ -484,10 +484,10 @@ function send_sqs_message(queue_name, message) {
     });
 }
 
-function get_sqs_messages(queue_name, max_messages = 10, visibility_timeout = 3, delete_message = true, wait = 0) {
-    const queue_url = aws_queue_urls[queue_name];
+function get_sqs_messages(queue, max_messages = 10, visibility_timeout = 3, delete_message = true, wait = 0) {
+    const queue_url = queue.startsWith('https://') ? queue : aws_queue_urls[queue];
     if (!queue_url) {
-        throw Error('queue_name not found: ' + queue_name);
+        throw Error('queue_name not found: ' + queue);
     }
     return new Promise((resolve) => {
         const sqs = new AWS.SQS();
@@ -505,7 +505,7 @@ function get_sqs_messages(queue_name, max_messages = 10, visibility_timeout = 3,
             } else {
                 if (data.Messages && data.Messages.length > 0) {
                     if (delete_message) {
-                        delete_sqs_messages(queue_name, data.Messages).then(() => {
+                        delete_sqs_messages(queue, data.Messages).then(() => {
                             resolve(data.Messages);
                         }).catch((err) => {
                             logger.error(err);
@@ -522,18 +522,18 @@ function get_sqs_messages(queue_name, max_messages = 10, visibility_timeout = 3,
     });
 }
 
-function delete_sqs_messages(queue_name, messages) {
+function delete_sqs_messages(queue, messages) {
     const promises = [];
     for (const message of messages) {
-        promises.push(delete_sqs_message(queue_name, message));
+        promises.push(delete_sqs_message(queue, message));
     }
     return Promise.all(promises);
 }
 
-function delete_sqs_message(queue_name, message) {
-    const queue_url = aws_queue_urls[queue_name];
+function delete_sqs_message(queue, message) {
+    const queue_url = queue.startsWith('https://') ? queue : aws_queue_urls[queue];
     if (!queue_url) {
-        throw Error('queue_name not found: ' + queue_name);
+        throw Error('queue_name not found: ' + queue);
     }
     return new Promise((resolve) => {
         const sqs = new AWS.SQS();
