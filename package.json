@@ -1,6 +1,6 @@
 {
   "name": "@samwen/aws-utils",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "a collection of aws functions",
   "main": "src/index.js",
   "scripts": {
