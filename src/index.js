@@ -186,10 +186,10 @@ function file_exists(bucket, key) {
     });
 }
 
-function delete_file(bucket, prefix) {
+function delete_file(bucket, key) {
     return new Promise((resolve) => {
         try {
-            const params = {Bucket: bucket, Prefix: prefix};
+            const params = {Bucket: bucket, key};
             const s3 = new AWS.S3();
             s3.deleteObjects(params, function(err, data) {
                 if (err) {
