@@ -14,6 +14,9 @@ module.exports = {
     upload_file,
     upload_folder,
     download_file,
+    delete_file,
+    list_folder,
+    delete_folder,
     register_task_definition,
     deregister_task_definition,
     create_ecs_service,
@@ -25,8 +28,6 @@ module.exports = {
     delete_sqs_messages,
     delete_sqs_message,
     get_signed_url,
-    delete_folder,
-    delete_file,
 };
 
 // eslint-disable-next-line prefer-const
@@ -181,6 +182,29 @@ function file_exists(bucket, key) {
             });
         } catch(err) {
             //logger.error(err);
+            resolve(false);
+        }
+    });
+}
+
+function list_folder(bucket, prefix) {
+    return new Promise((resolve) => {
+        try {
+            const params = {Bucket: bucket, Prefix: prefix};
+            const s3 = new AWS.S3();
+            s3.listObjects(params, function(err, data) {
+                if (err) {
+                    logger.error(err);
+                    resolve(false);
+                }
+                const keys = [];
+                for (const content of data.Contents) {
+                    keys.push(content.Key);
+                }
+                resolve(keys);
+            });
+        } catch(err) {
+            logger.error(err);
             resolve(false);
         }
     });
