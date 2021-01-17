@@ -213,7 +213,7 @@ function list_folder(bucket, prefix) {
 function delete_file(bucket, key) {
     return new Promise((resolve) => {
         try {
-            const params = {Bucket: bucket, Key: key};
+            const params = {Bucket: bucket, Delete: {Objects: [{Key: key}]}};
             const s3 = new AWS.S3();
             s3.deleteObjects(params, function(err, data) {
                 if (err) {
