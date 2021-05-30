@@ -309,7 +309,7 @@ function download_file(path, bucket, key) {
         const s3_stream = s3.getObject(params).createReadStream();
         const file_stream = createWriteStream(path);
         s3_stream.on('error', function(err) {
-            logger.error(err);
+            //logger.error(err);
             resolve(false);
         });
         s3_stream.pipe(file_stream).on('error', function(err) {
