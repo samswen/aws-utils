@@ -506,7 +506,7 @@ function get_queue_size_approximation(queue) {
 
 }
 
-function send_sqs_message(queue, message) {
+function send_sqs_message(queue, message, group_id) {
     const queue_url = queue.startsWith('https://') ? queue : aws_queue_urls[queue];
     if (!queue_url) {
         throw Error('queue_name not found: ' + queue);
@@ -517,6 +517,7 @@ function send_sqs_message(queue, message) {
             MessageBody: JSON.stringify(message),
             QueueUrl: queue_url
         };
+        if (group_id) params.MessageGroupId = group_id;
         sqs.sendMessage(params, function(err, data) {
             if (err) {
                 logger.error(err);
