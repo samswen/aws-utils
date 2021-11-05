@@ -28,7 +28,7 @@ module.exports = {
     delete_sqs_messages,
     delete_sqs_message,
     get_signed_url,
-    get_post_signed_url
+    get_put_signed_url
 };
 
 // eslint-disable-next-line prefer-const
@@ -190,7 +190,7 @@ function get_signed_url(bucket, key, expires = 900) {
     return null;
 }
 
-function get_post_signed_url(bucket, key, options = {ContentType: 'application/octet-stream', Expires: 900}) {
+function get_put_signed_url(bucket, key, options = {ContentType: 'application/octet-stream', Expires: 900}) {
     try {
         const s3 = new AWS.S3();
         const params = {Bucket: bucket, Key: key, ...options};
