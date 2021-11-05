@@ -28,6 +28,7 @@ module.exports = {
     delete_sqs_messages,
     delete_sqs_message,
     get_signed_url,
+    get_post_signed_url
 };
 
 // eslint-disable-next-line prefer-const
@@ -38,38 +39,58 @@ let aws_region = null;
 let aws_credentials = null;
 let aws_route53_info = null;
 let aws_queue_urls = null;
+// eslint-disable-next-line no-unused-vars
 let aws_vpc = null;
 let aws_security_groups = null;
 let aws_private_subnets = null;
+// eslint-disable-next-line no-unused-vars
 let aws_public_subnets = null;
 
 function setup(config, arg_logger) {
     if (!config) {
         throw new Error('call setup without config');
     }
-    if (!config.get('aws_account') || !config.get('aws_credentials')) {
-        throw new Error('config missing minima required aws_account and/or aws_credentials');
+    if (config.get) {
+        if (!config.get('aws_account') || !config.get('aws_credentials')) {
+            throw new Error('config missing minima required aws_account and/or aws_credentials');
+        }
+        aws_account = config.get('aws_account');
+        aws_credentials = config.get('aws_credentials');
+        aws_region = config.get('aws_region');
+        if (!aws_region) {
+            aws_region = 'us-east-1';
+        }
+        aws_route53_info = config.get('aws_route53_info');
+        aws_queue_urls = config.get('aws_queue_urls');
+        aws_security_groups = config.get('aws_security_groups');
+        // eslint-disable-next-line no-unused-vars
+        aws_vpc = config.get('aws_vpc');
+        // eslint-disable-next-line no-unused-vars
+        aws_public_subnets = config.get('aws_public_subnets');
+        aws_private_subnets = config.get('aws_private_subnets');
+        aws_credentials.region = aws_region;
+    } else {
+        aws_account = config.aws_account;
+        aws_credentials = config.aws_credentials;
+        aws_region = config.aws_region;
+        if (!aws_region) {
+            aws_region = 'us-east-1';
+        }
+        aws_route53_info = config.aws_route53_info;
+        aws_queue_urls = config.aws_queue_urls;
+        aws_security_groups = config.aws_security_groups;
+        // eslint-disable-next-line no-unused-vars
+        aws_vpc = config.aws_vpc;
+        // eslint-disable-next-line no-unused-vars
+        aws_public_subnets = config.aws_public_subnets;
+        aws_private_subnets = config.aws_private_subnets;
+        aws_credentials.region = aws_region;
     }
     if (!arg_logger) {
         logger = console;
     } else {
         logger = arg_logger;
     }
-    aws_account = config.get('aws_account');
-    aws_credentials = config.get('aws_credentials');
-    aws_region =  config.get('aws_region');
-    if (!aws_region) {
-        aws_region = 'us-east-1';
-    }
-    aws_route53_info = config.get('aws_route53_info');
-    aws_queue_urls = config.get('aws_queue_urls');
-    aws_security_groups = config.get('aws_security_groups');
-    // eslint-disable-next-line no-unused-vars
-    aws_vpc = config.get('aws_vpc');
-    // eslint-disable-next-line no-unused-vars
-    aws_public_subnets = config.get('aws_public_subnets');
-    aws_private_subnets = config.get('aws_private_subnets');
-    aws_credentials.region = aws_region;
     AWS.config.update(aws_credentials);
 }
 
@@ -162,6 +183,18 @@ function get_signed_url(bucket, key, expires = 900) {
         const s3 = new AWS.S3();
         const params = {Bucket: bucket, Key: key, Expires: expires};
         const url = s3.getSignedUrl('getObject', params);
+        return url;
+    } catch (err) {
+        logger.error(err);
+    }
+    return null;
+}
+
+function get_post_signed_url(bucket, key, options = {ContentType: 'application/octet-stream', Expires: 900}) {
+    try {
+        const s3 = new AWS.S3();
+        const params = {Bucket: bucket, Key: key, ...options};
+        const url = s3.getSignedUrl('putObject', params);
         return url;
     } catch (err) {
         logger.error(err);
