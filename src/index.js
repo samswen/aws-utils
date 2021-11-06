@@ -179,10 +179,13 @@ function publish_notification(topic, data) {
     });
 }
 
-function get_signed_url(bucket, key, expires = 900) {
+function get_signed_url(bucket, key, options = {Expires: 900}) {
     try {
         const s3 = new AWS.S3();
-        const params = {Bucket: bucket, Key: key, Expires: expires};
+        if (typeof options === 'number') { // backward compatible
+            options = {Expires: options};
+        }
+        const params = {Bucket: bucket, Key: key, ...options};
         const url = s3.getSignedUrl('getObject', params);
         return url;
     } catch (err) {
@@ -191,7 +194,7 @@ function get_signed_url(bucket, key, expires = 900) {
     return null;
 }
 
-function get_put_signed_url(bucket, key, options = {ContentType: 'application/octet-stream', Expires: 900}) {
+function get_put_signed_url(bucket, key, options = {Expires: 900}) {
     try {
         const s3 = new AWS.S3();
         const params = {Bucket: bucket, Key: key, ...options};
