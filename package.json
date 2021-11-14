@@ -1,6 +1,6 @@
 {
   "name": "@samwen/aws-utils",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "a collection of aws functions",
   "main": "src/index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "mocha": "^9.1.3"
   },
   "dependencies": {
-    "@samwen/fs-utils": "^1.0.3",
+    "@samwen/fs-utils": "^1.0.5",
     "aws-sdk": "^2.1023.0"
   }
 }

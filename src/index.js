@@ -11,6 +11,7 @@ module.exports = {
     delete_cname,
     publish_notification,
     file_exists,
+    file_head,
     upload_file,
     upload_folder,
     download_file,
@@ -232,6 +233,24 @@ function file_exists(bucket, key) {
         } catch(err) {
             //logger.error(err);
             resolve(false);
+        }
+    });
+}
+
+function file_head(bucket, key) {
+    return new Promise((resolve) => {
+        try {
+            const params = {Bucket: bucket, Key: key};
+            const s3 = new AWS.S3();
+            s3.headObject(params, function(err, response) {
+                if (err) {
+                    resolve(null);
+                }
+                return resolve(response);
+            });
+        } catch(err) {
+            //logger.error(err);
+            resolve(null);
         }
     });
 }
