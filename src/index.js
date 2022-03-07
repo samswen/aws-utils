@@ -329,7 +329,7 @@ function delete_folder(bucket, prefix) {
     });
 }
 
-function upload_file(path, bucket, key) {
+function upload_file(path, bucket, key, meta_data) {
     return new Promise((resolve) => {
         try {
             const file = createReadStream(path);
@@ -337,6 +337,7 @@ function upload_file(path, bucket, key) {
             file.pipe(pass);
             const s3 = new AWS.S3();
             const params = {Bucket: bucket, Key: key, Body: pass};
+            if (meta_data) params.Metadata = meta_data;
             s3.upload(params, function(err) {
                 if (err) {
                     logger.error(err);

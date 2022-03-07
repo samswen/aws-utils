@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/samswen/aws-utils#readme",
   "devDependencies": {
-    "chai": "^4.3.4",
-    "eslint": "^7.25.0",
+    "chai": "^4.3.6",
+    "eslint": "^8.10.0",
     "eslint-config-google": "^0.14.0",
-    "mocha": "^9.1.3"
+    "mocha": "^9.2.1"
   },
   "dependencies": {
     "@samwen/fs-utils": "^1.0.5",
-    "aws-sdk": "^2.1023.0"
+    "aws-sdk": "^2.1087.0"
   }
 }
